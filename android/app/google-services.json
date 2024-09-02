@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "480673739792",
+    "project_id": "e-commerce-c472f",
+    "storage_bucket": "e-commerce-c472f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:480673739792:android:107531e77e4962f9d04695",
+        "android_client_info": {
+          "package_name": "com.pollex.ecommerce"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAomgCT3CSVdswtmfQEgvWk18uWuf9lk40"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
