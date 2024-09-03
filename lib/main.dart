@@ -40,12 +40,13 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
           elevatedButtonTheme: ElevatedButtonThemeData(
               style: ElevatedButton.styleFrom(
+                  elevation: 0,
                   backgroundColor: AppColors.greenColor,
                   foregroundColor: Colors.white,
                   textStyle: const TextStyle(
                       fontSize: 14, fontWeight: FontWeight.bold),
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15)))),
+                      borderRadius: BorderRadius.circular(5)))),
           useMaterial3: true,
         ),
       ),

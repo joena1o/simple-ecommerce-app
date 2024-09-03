@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 
 class DataProvider {
@@ -21,8 +23,9 @@ class DataProvider {
         "Accept": "application/json",
         "Content-Type": "application/json",
       };
-      final response =
-          await http.post(Uri.parse(endpoint), body: body, headers: headers);
+      final response = await http.post(Uri.parse(endpoint),
+          body: json.encode(body), headers: headers);
+      print(response.body);
       return response;
     } catch (e) {
       rethrow;
@@ -49,8 +52,8 @@ class DataProvider {
         "Accept": "application/json",
         "Content-Type": "application/json",
       };
-      final response =
-          await http.put(Uri.parse(endpoint), body: body, headers: headers);
+      final response = await http.put(Uri.parse(endpoint),
+          body: json.encode(body), headers: headers);
       return response;
     } catch (e) {
       rethrow;
