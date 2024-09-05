@@ -1,7 +1,9 @@
+import 'package:ecommerce/Features/Auth/Services/auth_service.dart';
 import 'package:ecommerce/Features/Auth/bloc/auth_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class Auth extends StatefulWidget {
   const Auth({super.key});
@@ -103,7 +105,6 @@ class _AuthState extends State<Auth> {
                     height: 45,
                     child: ElevatedButton(
                         onPressed: () async {
-                          //final idToken = await AuthService.getGoogleIdToken();
                           callback();
                         },
                         child: const Text(
@@ -123,7 +124,9 @@ class _AuthState extends State<Auth> {
                                 WidgetStateProperty.all(Colors.black54),
                             backgroundColor: WidgetStateColor.transparent),
                         onPressed: () async {
-                          callback();
+                          final GoogleSignInAccount? result =
+                              await AuthService.signInWithGoogle();
+                          callbackWithGoogle(result);
                         },
                         child: const Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -177,6 +180,17 @@ class _AuthState extends State<Auth> {
 
   void callback() {
     BlocProvider.of<AuthBloc>(context).add(SignUpEventManually(
-        name: firstName.text, password: password.text, email: email.text));
+        name: firstName.text,
+        password: password.text,
+        email: email.text,
+        picture: null));
+  }
+
+  void callbackWithGoogle(GoogleSignInAccount? result) {
+    BlocProvider.of<AuthBloc>(context).add(SignUpEventManually(
+        name: result!.displayName!,
+        password: result.id,
+        email: result.email,
+        picture: result.displayName));
   }
 }

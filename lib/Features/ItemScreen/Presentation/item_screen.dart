@@ -1,8 +1,12 @@
+import 'package:ecommerce/Features/HomeScreen/Data/models/product_model.dart';
+import 'package:ecommerce/Features/ShoppingCart/bloc/shopping_cart_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:ecommerce/utils/utility_class.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ItemScreen extends StatefulWidget {
-  const ItemScreen({super.key});
+  final ProductModel? productModel;
+  const ItemScreen({super.key, required this.productModel});
 
   @override
   State<ItemScreen> createState() => _ItemScreenState();
@@ -11,6 +15,7 @@ class ItemScreen extends StatefulWidget {
 class _ItemScreenState extends State<ItemScreen> {
   @override
   Widget build(BuildContext context) {
+    ProductModel product = widget.productModel!;
     Size size = MediaQuery.of(context).size;
     return Scaffold(
         body: NestedScrollView(
@@ -34,13 +39,19 @@ class _ItemScreenState extends State<ItemScreen> {
                   floating: false,
                   pinned: true,
                   flexibleSpace: FlexibleSpaceBar(
-                    background: Container(),
+                    background: product.images.isNotEmpty
+                        ? SizedBox(
+                            child: Image(
+                              image: product.images[0],
+                            ),
+                          )
+                        : Container(),
                   ),
                   actions: const [
                     CircleAvatar(
                         foregroundColor: Colors.black,
                         backgroundColor: Colors.white,
-                        child: Icon(Icons.favorite)),
+                        child: Icon(Icons.favorite_outline)),
                     SizedBox(
                       width: 10,
                     ),
@@ -59,8 +70,8 @@ class _ItemScreenState extends State<ItemScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text("Xbox Series X",
-                        style: TextStyle(
+                    Text(product.title.toString(),
+                        style: const TextStyle(
                             fontSize: 23, fontWeight: FontWeight.w600)),
                     Container(
                         padding: const EdgeInsets.symmetric(
@@ -129,17 +140,16 @@ class _ItemScreenState extends State<ItemScreen> {
               ),
               Padding(
                 padding: UtilityClass.horizontalAndVerticalPadding,
-                child: const Text(
-                    "The Microsoft Xbox Series X gaming console Is capable of impressing with minimal boot times and mesmerizing visual effects when playing games at up to 120 frames per second",
-                    style:
-                        TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                child: Text(product.description,
+                    style: const TextStyle(
+                        fontSize: 14, fontWeight: FontWeight.w500)),
               ),
               Container(
                   width: size.width,
                   padding: UtilityClass.horizontalAndVerticalPadding,
                   child: Wrap(
                       alignment: WrapAlignment.start,
-                      children: List.generate(10, (i) {
+                      children: List.generate(product.varieties.length, (i) {
                         return Container(
                             margin: const EdgeInsets.symmetric(
                                 horizontal: 5, vertical: 5),
@@ -163,8 +173,9 @@ class _ItemScreenState extends State<ItemScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text("\$652",
-                      style: TextStyle(fontSize: 25, color: Colors.black38)),
+                  Text("\$${product.price}",
+                      style:
+                          const TextStyle(fontSize: 25, color: Colors.black38)),
                   SizedBox(
                     width: size.width / 6,
                   ),
@@ -172,7 +183,10 @@ class _ItemScreenState extends State<ItemScreen> {
                     child: SizedBox(
                       height: 60,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          BlocProvider.of<ShoppingCartBloc>(context)
+                              .add(AddToShoppingCartEvent(product: product));
+                        },
                         child: const Text("Add to Cart",
                             style: TextStyle(fontSize: 20)),
                       ),

@@ -1,7 +1,8 @@
-import 'package:ecommerce/Features/Auth/Data/repository/auth_repository.dart';
+import 'package:ecommerce/Features/Auth/data/repository/auth_repository.dart';
 import 'package:ecommerce/Features/Auth/bloc/auth_bloc.dart';
 import 'package:ecommerce/Features/HomeScreen/Data/repository/home_repository.dart';
 import 'package:ecommerce/Features/HomeScreen/bloc/home_bloc.dart';
+import 'package:ecommerce/Features/ShoppingCart/bloc/shopping_cart_bloc.dart';
 import 'package:ecommerce/core/config/get_it_setup.dart';
 import 'package:flutter/material.dart';
 import 'package:ecommerce/core/app_routes.dart';
@@ -12,6 +13,10 @@ void main() {
   setup();
   runApp(const MyApp());
 }
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+final GlobalKey<ScaffoldMessengerState> rootScaffoldMessengerKey =
+    GlobalKey<ScaffoldMessengerState>();
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -29,11 +34,14 @@ class MyApp extends StatelessWidget {
           create: (BuildContext context) =>
               AuthBloc(authRepository: getIt<AuthRepository>()),
         ),
+        BlocProvider<ShoppingCartBloc>(
+            create: (BuildContext context) => ShoppingCartBloc()),
       ],
       child: MaterialApp.router(
         routerConfig: router,
         title: 'E-commerce',
         debugShowCheckedModeBanner: false,
+        scaffoldMessengerKey: rootScaffoldMessengerKey,
         theme: ThemeData(
           appBarTheme: const AppBarTheme(backgroundColor: Colors.white),
           scaffoldBackgroundColor: Colors.white,

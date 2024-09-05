@@ -7,11 +7,12 @@ class NavigatorService {
     navigatorKey.currentState?.pushNamed(name);
   }
 
-  void goBack(name) {
+  void goBack() {
     navigatorKey.currentState?.pop();
   }
 
-  void goToAndReplace(name) {
-    navigatorKey.currentState?.pushReplacementNamed(name);
+  void goToAndReplace(Widget name) {
+    navigatorKey.currentState
+        ?.pushReplacement(MaterialPageRoute(builder: (_) => name));
   }
 }

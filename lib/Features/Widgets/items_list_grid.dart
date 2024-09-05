@@ -1,3 +1,4 @@
+import 'package:ecommerce/Features/HomeScreen/Data/models/product_model.dart';
 import 'package:ecommerce/Features/HomeScreen/bloc/home_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,67 +22,69 @@ class _ItemsListGridViewState extends State<ItemsListGridView> {
             child: CircularProgressIndicator(),
           );
         }
-        if(state is ProductLoadedState){
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),
-          child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2, childAspectRatio: size.width / 530),
-              itemCount: state.products.length,
-              itemBuilder: (BuildContext context, int index) {
-                return GestureDetector(
-                  onTap: () {
-                    context.push('/item');
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                              color: Colors.grey[200],
-                              borderRadius: BorderRadius.circular(10)),
-                          height: 170,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10.0),
-                          child: Row(
-                            children: [
-                              Text(
-                                "Air-pods",
-                                style: TextStyle(
-                                    fontSize: 15, color: Colors.grey[500]),
-                              ),
-                              Expanded(child: Container()),
-                              const Icon(
-                                Icons.star,
-                                size: 18,
-                              ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              const Text("4.9")
-                            ],
+        if (state is ProductLoadedState) {
+          return Padding(
+            padding:
+                const EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),
+            child: GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2, childAspectRatio: size.width / 530),
+                itemCount: state.products.length,
+                itemBuilder: (BuildContext context, int index) {
+                  ProductModel productModel = state.products[index];
+                  return GestureDetector(
+                    onTap: () {
+                      context.push('/item', extra: state.products[index]);
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                                color: Colors.grey[200],
+                                borderRadius: BorderRadius.circular(10)),
+                            height: 170,
                           ),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 0.0),
-                          child: Row(
-                            children: [
-                              Text(
-                                "\$132",
-                                style: TextStyle(fontSize: 20),
-                              ),
-                            ],
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10.0),
+                            child: Row(
+                              children: [
+                                Text(
+                                  productModel.title,
+                                  style: TextStyle(
+                                      fontSize: 15, color: Colors.grey[500]),
+                                ),
+                                Expanded(child: Container()),
+                                const Icon(
+                                  Icons.star,
+                                  size: 18,
+                                ),
+                                const SizedBox(
+                                  width: 5,
+                                ),
+                                const Text("4.9")
+                              ],
+                            ),
                           ),
-                        )
-                      ],
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 0.0),
+                            child: Row(
+                              children: [
+                                Text(
+                                  "\$${productModel.price}",
+                                  style: const TextStyle(fontSize: 20),
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              }),
-        );
+                  );
+                }),
+          );
         }
         return Container();
       },

@@ -1,7 +1,8 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ecommerce/Features/HomeScreen/Data/models/product_model.dart';
 import 'package:ecommerce/Features/HomeScreen/Data/repository/home_repository.dart';
 import 'package:ecommerce/helper/exception_handler.dart';
+// ignore: depend_on_referenced_packages
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
 

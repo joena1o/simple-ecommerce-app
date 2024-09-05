@@ -1,7 +1,9 @@
+import 'package:ecommerce/Features/Auth/Services/auth_service.dart';
 import 'package:ecommerce/Features/Auth/bloc/auth_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthLogin extends StatefulWidget {
   const AuthLogin({super.key});
@@ -18,16 +20,17 @@ class _AuthLoginState extends State<AuthLogin> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      body: BlocBuilder<AuthBloc, AuthState>(
+      body: BlocConsumer<AuthBloc, AuthState>(
+        listener: (context, state) {
+          if (state is AuthLoadedState) {
+            GoRouter.of(context).go('/');
+          }
+        },
         builder: (context, state) {
           if (state is AuthLoadingState) {
             return const Center(
               child: CircularProgressIndicator(),
             );
-          }
-
-          if (state is AuthFailedState) {
-            print(state.errorMessage);
           }
 
           return SizedBox(
@@ -40,6 +43,7 @@ class _AuthLoginState extends State<AuthLogin> {
                 Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: TextFormField(
+                    controller: email,
                     decoration: const InputDecoration(
                         hintText: "Enter your email address"),
                   ),
@@ -47,6 +51,7 @@ class _AuthLoginState extends State<AuthLogin> {
                 Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: TextFormField(
+                    controller: password,
                     decoration:
                         const InputDecoration(hintText: "Enter your password"),
                   ),
@@ -77,8 +82,9 @@ class _AuthLoginState extends State<AuthLogin> {
                               WidgetStateProperty.all(Colors.black54),
                           backgroundColor: WidgetStateColor.transparent),
                       onPressed: () async {
-                        // final idToken = await AuthService.getGoogleIdToken();
-                        // callback(idToken);
+                        final GoogleSignInAccount? result =
+                            await AuthService.signInWithGoogle();
+                        callbackWithGoogle(result);
                       },
                       child: const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -129,7 +135,15 @@ class _AuthLoginState extends State<AuthLogin> {
   }
 
   void callback() {
-    BlocProvider.of<AuthBloc>(context)
-        .add(SignInEvent(email: email.text, password: password.text));
+    BlocProvider.of<AuthBloc>(context).add(SignInEvent(
+        email: email.text, password: password.text, context: context));
+  }
+
+  void callbackWithGoogle(GoogleSignInAccount? result) {
+    BlocProvider.of<AuthBloc>(context).add(SignUpEventManually(
+        name: result!.displayName!,
+        password: result.id,
+        email: result.email,
+        picture: result.displayName));
   }
 }

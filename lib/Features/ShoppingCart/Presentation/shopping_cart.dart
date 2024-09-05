@@ -1,5 +1,7 @@
+import 'package:ecommerce/Features/ShoppingCart/bloc/shopping_cart_bloc.dart';
 import 'package:ecommerce/Features/Widgets/cart_item.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ShoppingCartPage extends StatefulWidget {
   const ShoppingCartPage({super.key});
@@ -48,20 +50,32 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
             height: size.height,
             child: Column(
               children: [
-                Column(
-                  children: List.generate(3, (index) {
-                    return index < 3
-                        ? const Column(
-                            children: [
-                              CartItem(),
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 25.0),
-                                child: Divider(),
-                              )
-                            ],
-                          )
-                        : const CartItem();
-                  }),
+                BlocBuilder<ShoppingCartBloc, ShoppingCartState>(
+                  builder: (context, state) {
+                    if (state is ShoppingCartLoadedState) {
+                      return Column(
+                        children: List.generate(state.products.length, (index) {
+                          return index < 3
+                              ? Column(
+                                  children: [
+                                    CartItem(
+                                      product: state.products[index],
+                                    ),
+                                    const Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 25.0),
+                                      child: Divider(),
+                                    )
+                                  ],
+                                )
+                              : CartItem(
+                                  product: state.products[index],
+                                );
+                        }),
+                      );
+                    }
+                    return Container();
+                  },
                 ),
                 const SizedBox(
                   height: 20,
@@ -110,7 +124,7 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
                         style: TextStyle(fontSize: 16),
                       ),
                       Text(
-                        "40%",
+                        "0%",
                         style: TextStyle(
                             fontWeight: FontWeight.w600, fontSize: 18),
                       )
@@ -124,23 +138,31 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
         bottomNavigationBar: BottomAppBar(
             height: 100,
             color: Colors.white,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: SizedBox(
-                      height: 60,
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        child: const Text("Checkout for \$480",
-                            style: TextStyle(fontSize: 20)),
-                      ),
+            child: BlocBuilder<ShoppingCartBloc, ShoppingCartState>(
+              builder: (context, state) {
+                if (state is ShoppingCartLoadedState) {
+                  int total = state.products.fold(0, (sum, e) => sum + e.price);
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: SizedBox(
+                            height: 60,
+                            child: ElevatedButton(
+                              onPressed: () {},
+                              child: Text("Checkout for \$$total",
+                                  style: const TextStyle(fontSize: 20)),
+                            ),
+                          ),
+                        )
+                      ],
                     ),
-                  )
-                ],
-              ),
+                  );
+                }
+                return Container();
+              },
             )));
   }
 }

@@ -15,7 +15,7 @@ class AuthEmptyState extends AuthState {}
 
 class AuthLoadedState extends AuthState {
   const AuthLoadedState({required this.user});
-  final Map<String, dynamic> user;
+  final UserModel user;
   @override
   List<Object> get props => [user];
 }

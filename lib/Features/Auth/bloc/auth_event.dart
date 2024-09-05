@@ -17,12 +17,18 @@ class SignUpEventManually extends AuthEvent {
   final String name;
   final String email;
   final String password;
+  final String? picture;
   const SignUpEventManually(
-      {required this.name, required this.email, required this.password});
+      {required this.name,
+      required this.email,
+      required this.password,
+      required this.picture});
 }
 
 class SignInEvent extends AuthEvent {
   final String email;
   final String password;
-  const SignInEvent({required this.email, required this.password});
+  final BuildContext context;
+  const SignInEvent(
+      {required this.email, required this.password, required this.context});
 }

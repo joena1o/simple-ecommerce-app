@@ -1,7 +1,9 @@
+import 'package:ecommerce/Features/HomeScreen/Data/models/product_model.dart';
 import 'package:flutter/material.dart';
 
 class CartItem extends StatelessWidget {
-  const CartItem({super.key});
+  final ProductModel product;
+  const CartItem({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
@@ -9,7 +11,6 @@ class CartItem extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       width: size.width,
-      // height: 130,
       child: Row(
         children: [
           Container(
@@ -25,15 +26,15 @@ class CartItem extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Xbox Series X",
-                      style:
-                          TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+                      product.title,
+                      style: const TextStyle(
+                          fontSize: 17, fontWeight: FontWeight.w600),
                     ),
-                    Icon(
+                    const Icon(
                       Icons.close,
                       size: 18,
                       color: Colors.grey,
@@ -49,10 +50,10 @@ class CartItem extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    const Text(
-                      "\$570.00",
-                      style:
-                          TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+                    Text(
+                      "\$${product.price}",
+                      style: const TextStyle(
+                          fontSize: 17, fontWeight: FontWeight.w600),
                     ),
                     Expanded(
                       child: Container(),
