@@ -6,9 +6,9 @@ class DialogServices {
     final snackBar = SnackBar(
       content: Text(
         message,
-        style: const TextStyle(color: Colors.green),
+        style: const TextStyle(color: Colors.white),
       ),
-      backgroundColor: const Color.fromARGB(255, 18, 25, 22),
+      backgroundColor: Colors.greenAccent,
       duration: const Duration(seconds: 2),
     );
     rootScaffoldMessengerKey.currentState?.showSnackBar(snackBar);

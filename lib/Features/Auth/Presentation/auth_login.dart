@@ -23,7 +23,7 @@ class _AuthLoginState extends State<AuthLogin> {
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthLoadedState) {
-            GoRouter.of(context).go('/');
+            GoRouter.of(context).go('/home');
           }
         },
         builder: (context, state) {
@@ -135,8 +135,8 @@ class _AuthLoginState extends State<AuthLogin> {
   }
 
   void callback() {
-    BlocProvider.of<AuthBloc>(context).add(SignInEvent(
-        email: email.text, password: password.text, context: context));
+    BlocProvider.of<AuthBloc>(context)
+        .add(SignInEvent(email: email.text, password: password.text));
   }
 
   void callbackWithGoogle(GoogleSignInAccount? result) {

@@ -8,9 +8,13 @@ import 'package:flutter/material.dart';
 import 'package:ecommerce/core/app_routes.dart';
 import 'package:ecommerce/core/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+//import 'package:flutter_stripe/flutter_stripe.dart';
 
-void main() {
+void main() async {
   setup();
+  await dotenv.load(fileName: "assets/.env");
+  //Stripe.publishableKey = dotenv.env['PUBLIC_KEY'].toString();
   runApp(const MyApp());
 }
 

@@ -19,4 +19,19 @@ class HomeRepository {
       rethrow;
     }
   }
+
+  Future<dynamic> addToWishList(Map<String, dynamic> body) async {
+    try {
+      final response = await DataProvider.postRequest(
+          endpoint: "$conn/wishlist", body: body);
+      if (response.statusCode == 200) {
+        final result = json.decode(response.body);
+        return result;
+      } else {
+        throw "Error fetching products";
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

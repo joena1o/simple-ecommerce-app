@@ -11,3 +11,9 @@ sealed class HomeEvent extends Equatable {
 class GetProductEvent extends HomeEvent {}
 
 class GetHomePageBanners extends HomeEvent {}
+
+class AddToFavorites extends HomeEvent {
+  final String userId;
+  final String itemId;
+  const AddToFavorites({required this.userId, required this.itemId});
+}

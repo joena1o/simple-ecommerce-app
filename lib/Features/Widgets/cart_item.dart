@@ -1,5 +1,7 @@
 import 'package:ecommerce/Features/HomeScreen/Data/models/product_model.dart';
+import 'package:ecommerce/Features/ShoppingCart/bloc/shopping_cart_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CartItem extends StatelessWidget {
   final ProductModel product;
@@ -34,11 +36,16 @@ class CartItem extends StatelessWidget {
                       style: const TextStyle(
                           fontSize: 17, fontWeight: FontWeight.w600),
                     ),
-                    const Icon(
-                      Icons.close,
-                      size: 18,
-                      color: Colors.grey,
-                    )
+                    IconButton(
+                        onPressed: () {
+                          BlocProvider.of<ShoppingCartBloc>(context)
+                              .add(RemoveShoppingItemEvent(product: product));
+                        },
+                        icon: const Icon(
+                          Icons.close,
+                          size: 18,
+                          color: Colors.grey,
+                        ))
                   ],
                 ),
                 const Padding(

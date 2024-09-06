@@ -48,12 +48,13 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
           child: SizedBox(
             width: size.width,
             height: size.height,
-            child: Column(
-              children: [
-                BlocBuilder<ShoppingCartBloc, ShoppingCartState>(
-                  builder: (context, state) {
-                    if (state is ShoppingCartLoadedState) {
-                      return Column(
+            child: BlocBuilder<ShoppingCartBloc, ShoppingCartState>(
+              builder: (context, state) {
+                if (state is ShoppingCartLoadedState) {
+                  int total = state.products.fold(0, (sum, e) => sum + e.price);
+                  return Column(
+                    children: [
+                      Column(
                         children: List.generate(state.products.length, (index) {
                           return index < 3
                               ? Column(
@@ -72,66 +73,69 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
                                   product: state.products[index],
                                 );
                         }),
-                      );
-                    }
-                    return Container();
-                  },
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 25),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Subtotal:",
-                        style: TextStyle(fontSize: 16),
                       ),
-                      Text(
-                        "\$800.00",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600, fontSize: 18),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 5.0, horizontal: 25),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              "Subtotal:",
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            Text(
+                              "\$$total",
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w600, fontSize: 18),
+                            )
+                          ],
+                        ),
+                      ),
+                      const Padding(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 5.0, horizontal: 25),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Delivery Fee:",
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            Text(
+                              "\$5.00",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600, fontSize: 18),
+                            )
+                          ],
+                        ),
+                      ),
+                      const Padding(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 5.0, horizontal: 25),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Discount:",
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            Text(
+                              "0%",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600, fontSize: 18),
+                            )
+                          ],
+                        ),
                       )
                     ],
-                  ),
-                ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 25),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Delivery Fee:",
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      Text(
-                        "\$5.00",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600, fontSize: 18),
-                      )
-                    ],
-                  ),
-                ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 25),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Discount:",
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      Text(
-                        "0%",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600, fontSize: 18),
-                      )
-                    ],
-                  ),
-                )
-              ],
+                  );
+                }
+                return Container();
+              },
             ),
           ),
         ),

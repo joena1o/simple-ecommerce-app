@@ -17,4 +17,6 @@ class UtilityClass {
     "Monitors",
     "Consoles"
   ];
+
+  static final tabHeader = ["Discover", "Search", "Favorites", "Profile"];
 }

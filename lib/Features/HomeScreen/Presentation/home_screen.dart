@@ -1,39 +1,41 @@
+import 'package:ecommerce/Features/HomeScreen/Presentation/Pages/home_page.dart';
+import 'package:ecommerce/Features/HomeScreen/Presentation/Pages/profile_page.dart';
+import 'package:ecommerce/Features/HomeScreen/Presentation/Pages/search_page.dart';
+import 'package:ecommerce/Features/HomeScreen/Presentation/Pages/wish_list_page.dart';
 import 'package:ecommerce/Features/HomeScreen/bloc/home_bloc.dart';
-import 'package:ecommerce/Features/Widgets/banner_widget.dart';
-import 'package:ecommerce/Features/Widgets/items_categories_scroller.dart';
-import 'package:ecommerce/Features/Widgets/items_list_grid.dart';
-import 'package:ecommerce/Features/Widgets/search_bar.dart';
 import 'package:ecommerce/core/app_colors.dart';
+import 'package:ecommerce/utils/utility_class.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:unicons/unicons.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     context.read<HomeBloc>().add(GetProductEvent());
     super.initState();
   }
 
+  int currentTabIndex = 0;
+
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
           centerTitle: false,
-          title: const Padding(
-            padding: EdgeInsets.only(left: 10.0),
+          title: Padding(
+            padding: const EdgeInsets.only(left: 10.0),
             child: Text(
-              "Discover",
-              style: TextStyle(fontSize: 23, fontWeight: FontWeight.w500),
+              UtilityClass.tabHeader[currentTabIndex],
+              style: const TextStyle(fontSize: 23, fontWeight: FontWeight.w500),
             ),
           ),
           actions: [
@@ -55,23 +57,7 @@ class _HomePageState extends State<HomePage> {
                   )),
             )
           ]),
-      body: SingleChildScrollView(
-        child: SizedBox(
-          width: size.width,
-          height: size.height,
-          child: const Column(
-            children: [
-              SearchBarWidget(),
-              SizedBox(
-                height: 10,
-              ),
-              BannerWidget(),
-              ItemsCategoriesScroll(),
-              ItemsListGridView()
-            ],
-          ),
-        ),
-      ),
+      body: tabs[currentTabIndex],
       bottomNavigationBar: BottomAppBar(
         padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
         elevation: 0,
@@ -79,46 +65,70 @@ class _HomePageState extends State<HomePage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              children: [
-                Icon(UniconsLine.home_alt,
-                    size: 30, color: AppColors.greenColor),
-                Text(
-                  "Home",
-                  style: TextStyle(color: AppColors.greenColor),
-                )
-              ],
+            GestureDetector(
+                onTap: () {
+                  setState(() => currentTabIndex = 0);
+                },
+                child: Column(
+                  children: [
+                    Icon(UniconsLine.home_alt,
+                        size: 30, color: AppColors.greenColor),
+                    Text(
+                      "Home",
+                      style: TextStyle(color: AppColors.greenColor),
+                    )
+                  ],
+                )),
+            GestureDetector(
+              onTap: () {
+                setState(() => currentTabIndex = 1);
+              },
+              child: const Column(
+                children: [
+                  Icon(
+                    UniconsLine.search,
+                    size: 28,
+                  ),
+                  Text("Search")
+                ],
+              ),
             ),
-            const Column(
-              children: [
-                Icon(
-                  UniconsLine.search,
-                  size: 28,
-                ),
-                Text("Search")
-              ],
-            ),
-            const Column(
-              children: [
-                Icon(
-                  UniconsLine.heart,
-                  size: 28,
-                ),
-                Text("Favorites")
-              ],
-            ),
-            const Column(
-              children: [
-                Icon(
-                  UniconsLine.user,
-                  size: 28,
-                ),
-                Text("Profile")
-              ],
-            )
+            GestureDetector(
+                onTap: () {
+                  setState(() => currentTabIndex = 2);
+                },
+                child: const Column(
+                  children: [
+                    Icon(
+                      UniconsLine.heart,
+                      size: 28,
+                    ),
+                    Text("Favorites")
+                  ],
+                )),
+            GestureDetector(
+                onTap: () {
+                  setState(() => currentTabIndex = 3);
+                },
+                child: const Column(
+                  children: [
+                    Icon(
+                      UniconsLine.user,
+                      size: 28,
+                    ),
+                    Text("Profile")
+                  ],
+                ))
           ],
         ),
       ),
     );
   }
+
+  final tabs = [
+    const HomePage(),
+    const SearchPage(),
+    const WishListPage(),
+    const ProfilePage()
+  ];
 }

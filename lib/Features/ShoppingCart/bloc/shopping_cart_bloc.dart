@@ -19,6 +19,7 @@ class ShoppingCartBloc extends Bloc<ShoppingCartEvent, ShoppingCartState> {
           final updatedList = List<ProductModel>.from(currentState.products)
             ..add(event.product);
           emit(ShoppingCartLoadedState(products: updatedList));
+          getIt<DialogServices>().showMessage("Item has been added to cart");
         } else {
           getIt<DialogServices>().showMessageError("Item already added");
         }
@@ -26,7 +27,6 @@ class ShoppingCartBloc extends Bloc<ShoppingCartEvent, ShoppingCartState> {
         final initialList = [event.product];
         emit(ShoppingCartLoadedState(products: initialList));
       }
-      getIt<DialogServices>().showMessage("Item has been added to cart");
     });
 
     on<RemoveShoppingItemEvent>(
