@@ -8,7 +8,7 @@ class DialogServices {
         message,
         style: const TextStyle(color: Colors.white),
       ),
-      backgroundColor: Colors.greenAccent,
+      backgroundColor: Colors.green,
       duration: const Duration(seconds: 2),
     );
     rootScaffoldMessengerKey.currentState?.showSnackBar(snackBar);

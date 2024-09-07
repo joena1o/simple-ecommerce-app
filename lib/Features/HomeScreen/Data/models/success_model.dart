@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final successMessageModel = successMessageModelFromJson(jsonString);
-
 import 'dart:convert';
 
 SuccessMessageModel successMessageModelFromJson(String str) =>

@@ -26,6 +26,7 @@ class ShoppingCartBloc extends Bloc<ShoppingCartEvent, ShoppingCartState> {
       } else {
         final initialList = [event.product];
         emit(ShoppingCartLoadedState(products: initialList));
+        getIt<DialogServices>().showMessage("Item has been added to cart");
       }
     });
 

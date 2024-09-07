@@ -18,8 +18,8 @@ class SearchBarWidget extends StatelessWidget {
         children: [
           Expanded(
             child: TextField(
-              decoration:
-                  InputDecoration(border: InputBorder.none, hintText: "Search"),
+              decoration: InputDecoration(
+                  border: InputBorder.none, hintText: "Type here to search"),
             ),
           ),
           Icon(

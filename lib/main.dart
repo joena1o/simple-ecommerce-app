@@ -1,6 +1,7 @@
 import 'package:ecommerce/Features/Auth/data/repository/auth_repository.dart';
 import 'package:ecommerce/Features/Auth/bloc/auth_bloc.dart';
 import 'package:ecommerce/Features/HomeScreen/Data/repository/home_repository.dart';
+import 'package:ecommerce/Features/HomeScreen/bloc/favorite_bloc.dart';
 import 'package:ecommerce/Features/HomeScreen/bloc/home_bloc.dart';
 import 'package:ecommerce/Features/ShoppingCart/bloc/shopping_cart_bloc.dart';
 import 'package:ecommerce/core/config/get_it_setup.dart';
@@ -40,6 +41,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<ShoppingCartBloc>(
             create: (BuildContext context) => ShoppingCartBloc()),
+        BlocProvider<FavoriteBloc>(
+            create: (BuildContext context) =>
+                FavoriteBloc(homeRepository: getIt<HomeRepository>())),
       ],
       child: MaterialApp.router(
         routerConfig: router,

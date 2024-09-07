@@ -1,3 +1,4 @@
+import 'package:ecommerce/Features/Widgets/search_bar.dart';
 import 'package:flutter/material.dart';
 
 class SearchPage extends StatefulWidget {
@@ -10,6 +11,10 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return const Column(
+      children: [
+        SearchBarWidget(),
+      ],
+    );
   }
 }

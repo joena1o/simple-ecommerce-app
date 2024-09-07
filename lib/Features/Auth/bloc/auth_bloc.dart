@@ -42,8 +42,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       try {
         final user = await authRepository
             .signIn({"email": event.email, "password": event.password});
-        SharedPrefService.saveItem("email", event.email);
+        SharedPrefService.saveJsonDetails(
+            "userDetails", UserModel.fromJson(user.toJson()));
         SharedPrefService.saveItem("password", event.password);
+        SharedPrefService.saveItem("email", event.email);
         emit(AuthLoadedState(user: user));
       } catch (e) {
         final message = handleExceptionWithMessage(e);

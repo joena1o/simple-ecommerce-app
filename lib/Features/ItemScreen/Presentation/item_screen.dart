@@ -1,5 +1,9 @@
+import 'package:ecommerce/Features/Auth/bloc/auth_bloc.dart';
+import 'package:ecommerce/Features/Auth/data/models/models.dart';
 import 'package:ecommerce/Features/HomeScreen/Data/models/product_model.dart';
+import 'package:ecommerce/Features/HomeScreen/bloc/favorite_bloc.dart';
 import 'package:ecommerce/Features/ShoppingCart/bloc/shopping_cart_bloc.dart';
+import 'package:ecommerce/data/local_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:ecommerce/utils/utility_class.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,6 +17,13 @@ class ItemScreen extends StatefulWidget {
 }
 
 class _ItemScreenState extends State<ItemScreen> {
+  UserModel? user;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     ProductModel product = widget.productModel!;
@@ -21,46 +32,68 @@ class _ItemScreenState extends State<ItemScreen> {
         body: NestedScrollView(
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
-              SliverAppBar(
-                  leading: GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.only(left: 28.0),
-                      child: const CircleAvatar(
-                          radius: 20,
-                          foregroundColor: Colors.black,
-                          backgroundColor: Colors.white,
-                          child: Icon(Icons.arrow_back)),
-                    ),
-                  ),
-                  expandedHeight: 400.0,
-                  floating: false,
-                  pinned: true,
-                  flexibleSpace: FlexibleSpaceBar(
-                    background: product.images.isNotEmpty
-                        ? SizedBox(
-                            child: Image(
-                              image: product.images[0],
-                            ),
-                          )
-                        : Container(),
-                  ),
-                  actions: const [
-                    CircleAvatar(
-                        foregroundColor: Colors.black,
-                        backgroundColor: Colors.white,
-                        child: Icon(Icons.favorite_outline)),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    CircleAvatar(
-                        foregroundColor: Colors.black,
-                        backgroundColor: Colors.white,
-                        child: Icon(Icons.share)),
-                    SizedBox(width: 20)
-                  ]),
+              BlocListener<FavoriteBloc, FavoriteState>(
+                listener: (context, favoriteState) {
+                  if (favoriteState is FavoriteAddedState) {
+                    loadFavoriteList();
+                  }
+                },
+                child: BlocBuilder<AuthBloc, AuthState>(
+                  builder: (context, state) {
+                    if (state is AuthLoadedState) {
+                      user = state.user;
+                    }
+                    return SliverAppBar(
+                        leading: GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.only(left: 28.0),
+                            child: const CircleAvatar(
+                                radius: 20,
+                                foregroundColor: Colors.black,
+                                backgroundColor: Colors.white,
+                                child: Icon(Icons.arrow_back)),
+                          ),
+                        ),
+                        expandedHeight: 400.0,
+                        floating: false,
+                        pinned: true,
+                        flexibleSpace: FlexibleSpaceBar(
+                          background: product.images.isNotEmpty
+                              ? SizedBox(
+                                  child: Image(
+                                    image: product.images[0],
+                                  ),
+                                )
+                              : Container(),
+                        ),
+                        actions: [
+                          GestureDetector(
+                            onTap: () {
+                              BlocProvider.of<FavoriteBloc>(context).add(
+                                  AddToFavoriteEvent(
+                                      itemId: product.id,
+                                      userId: user!.data.id));
+                            },
+                            child: const CircleAvatar(
+                                foregroundColor: Colors.black,
+                                backgroundColor: Colors.white,
+                                child: Icon(Icons.favorite_outline)),
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          const CircleAvatar(
+                              foregroundColor: Colors.black,
+                              backgroundColor: Colors.white,
+                              child: Icon(Icons.share)),
+                          const SizedBox(width: 20)
+                        ]);
+                  },
+                ),
+              ),
             ];
           },
           body: SingleChildScrollView(
@@ -195,5 +228,13 @@ class _ItemScreenState extends State<ItemScreen> {
                 ],
               ),
             )));
+  }
+
+  void loadFavoriteList() async {
+    await SharedPrefService.readJsonValue("userDetails").then((value) {
+      UserModel userModel = UserModel.fromJson(value);
+      BlocProvider.of<FavoriteBloc>(context)
+          .add(GetFavoriteEvent(userId: userModel.data.id));
+    });
   }
 }

@@ -40,7 +40,6 @@ class DataProvider {
             };
       final response = await http.post(Uri.parse(endpoint),
           body: json.encode(body), headers: headers);
-      //print(response.body);
       return response;
     } catch (e) {
       rethrow;

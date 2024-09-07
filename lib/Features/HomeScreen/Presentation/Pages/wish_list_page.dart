@@ -1,5 +1,8 @@
+import 'package:ecommerce/Features/Auth/data/models/models.dart';
+import 'package:ecommerce/Features/HomeScreen/Data/models/favorite_model.dart';
 import 'package:ecommerce/Features/HomeScreen/Data/models/product_model.dart';
-import 'package:ecommerce/Features/HomeScreen/bloc/home_bloc.dart';
+import 'package:ecommerce/Features/HomeScreen/bloc/favorite_bloc.dart';
+import 'package:ecommerce/data/local_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -13,31 +16,40 @@ class WishListPage extends StatefulWidget {
 
 class _WishListPageState extends State<WishListPage> {
   @override
+  void initState() {
+    loadFavoriteList();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return SizedBox(
         width: size.width,
         height: size.height,
-        child: BlocBuilder<HomeBloc, HomeState>(
+        child: BlocBuilder<FavoriteBloc, FavoriteState>(
           builder: (context, state) {
-            if (state is ProductLoadingState) {
+            if (state is FavoriteLoadingState) {
               return const Center(
                 child: CircularProgressIndicator(),
               );
             }
-            if (state is ProductLoadedState) {
+            if (state is FavoriteLoadedState) {
               return Padding(
                 padding: const EdgeInsets.symmetric(
                     vertical: 20.0, horizontal: 10.0),
                 child: GridView.builder(
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2, childAspectRatio: size.width / 530),
-                    itemCount: state.products.length,
+                    itemCount: state.favoriteItems.length,
                     itemBuilder: (BuildContext context, int index) {
-                      ProductModel productModel = state.products[index];
+                      FavoriteProductModel productModel =
+                          state.favoriteItems[index];
                       return GestureDetector(
                         onTap: () {
-                          context.push('/item', extra: state.products[index]);
+                          context.push('/item',
+                              extra: ProductModel.fromJson(
+                                  state.favoriteItems[index].itemId.toJson()));
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(10.0),
@@ -55,7 +67,7 @@ class _WishListPageState extends State<WishListPage> {
                                 child: Row(
                                   children: [
                                     Text(
-                                      productModel.title,
+                                      productModel.itemId.title,
                                       style: TextStyle(
                                           fontSize: 15,
                                           color: Colors.grey[500]),
@@ -78,7 +90,7 @@ class _WishListPageState extends State<WishListPage> {
                                 child: Row(
                                   children: [
                                     Text(
-                                      "\$${productModel.price}",
+                                      "\$${productModel.itemId.price}",
                                       style: const TextStyle(fontSize: 20),
                                     ),
                                   ],
@@ -94,5 +106,13 @@ class _WishListPageState extends State<WishListPage> {
             return Container();
           },
         ));
+  }
+
+  void loadFavoriteList() async {
+    await SharedPrefService.readJsonValue("userDetails").then((value) {
+      UserModel userModel = UserModel.fromJson(value);
+      BlocProvider.of<FavoriteBloc>(context)
+          .add(GetFavoriteEvent(userId: userModel.data.id));
+    });
   }
 }
